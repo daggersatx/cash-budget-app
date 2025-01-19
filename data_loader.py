@@ -25,7 +25,7 @@ def load_local_excel(file_path):
         return None, None, None, None, None, None
 
 # ✅ Load the data by calling load_data() directly
-actuals, recurring_expenses, cash_inflow, vaults, start_balances, cc_payments = load_data()
+# actuals, recurring_expenses, cash_inflow, vaults, start_balances, cc_payments = load_data()
 
 # ✅ Debug: Confirm that CC Payments is loaded
 if cc_payments is not None:

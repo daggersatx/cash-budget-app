@@ -7,6 +7,20 @@ from data_loader import load_data
 # ✅ Load Data
 actuals, recurring_expenses, cash_inflow, vaults, start_balances, cc_payments = load_data()
 
+if actuals is None:
+    st.error("❌ Failed to load 'Actuals' data.")
+if recurring_expenses is None:
+    st.error("❌ Failed to load 'Recurring Expenses' data.")
+if cash_inflow is None:
+    st.error("❌ Failed to load 'Cash Inflow' data.")
+if vaults is None:
+    st.error("❌ Failed to load 'Vaults' data.")
+if start_balances is None:
+    st.error("❌ Failed to load 'Start Balances' data.")
+if cc_payments is None:
+    st.error("❌ Failed to load 'CC Payments' data.")
+
+
 st.title("📊 Cash and Budget Forecasting App")
 
 try:

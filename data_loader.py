@@ -19,10 +19,11 @@ def load_excel_from_dropbox(file_path):
         logging.info(f"✅ File downloaded: {metadata.name}")
         logging.info(f"File size: {len(res.content)} bytes")
         return pd.ExcelFile(io.BytesIO(res.content))
+    except dropbox.exceptions.ApiError as api_error:
+        logging.error(f"❌ Dropbox API error: {api_error}")
     except Exception as e:
         logging.error(f"❌ Error downloading or parsing file from Dropbox: {e}")
-        return None
-
+    return None
 def load_data():
     """Main function to load data from Dropbox."""
     dropbox_file_path = '/Cash Budget Data.xlsx'

@@ -8,9 +8,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # ✅ Load and validate the local Excel file
 def load_local_excel(file_path):
     if not os.path.exists(file_path):
-    logging.error(f"❌ File not found: {file_path}")
-    st.error(f"❌ File not found: {file_path}")
-    return None, None, None, None, None, None
+        logging.error(f"❌ File not found: {file_path}")
+        st.error(f"❌ File not found: {file_path}")
+        return None, None, None, None, None, None
     try:
         excel_data = pd.ExcelFile(file_path)
         logging.info(f"✅ Loaded local file: {file_path}")
@@ -27,4 +27,3 @@ def load_local_excel(file_path):
 
 # ✅ Load the data by calling load_data() directly
 # actuals, recurring_expenses, cash_inflow, vaults, start_balances, cc_payments = load_data()
-

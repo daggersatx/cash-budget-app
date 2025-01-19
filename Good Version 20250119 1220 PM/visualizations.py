@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import streamlit as st
 import pandas as pd
-from datetime import datetime
 
 # ✅ Plot Balances Function (Resized)
 def plot_balances(forecast_df):
@@ -21,48 +20,29 @@ def plot_balances(forecast_df):
 # ✅ Removed Plot Vault Funding Chart
 
 # ✅ Display Actionable Tasks (with Warnings)
-def display_tasks(tasks_by_date):
+def display_tasks(tasks_by_date, warnings=None):
     st.subheader("📝 Actionable Tasks")
-
-    # Group tasks by month
-    tasks_by_month = {}
-    for date, tasks in tasks_by_date.items():
-        month_key = pd.to_datetime(date).strftime("%B %Y")
-        if month_key not in tasks_by_month:
-            tasks_by_month[month_key] = {}
-        tasks_by_month[month_key][date] = tasks
-
-    # Display tasks grouped by month in expanders
-    for month, month_tasks in tasks_by_month.items():
-        with st.expander(month):
-            for date, tasks in month_tasks.items():
-                # If there's only one task, display the date and task on the same line with the date in bold
-                if len(tasks) == 1:
-                    task = tasks[0]
-                    task = task.replace("Funded", "Fund").replace("Vault", "Vault")
-                    if "Fund" in task and "Vault" not in task:
-                        task = task.replace("Fund", "Fund") + " Vault"
-                    elif "Swept" in task:
-                        task = task.replace("Swept", "Sweep")
-                    st.write(f"**{date}**: {task}")
-                else:
-                    # Display the date in bold, followed by tasks
-                    st.write(f"**{date}**")
-                    for task in tasks:
-                        task = task.replace("Funded", "Fund").replace("Vault", "Vault")
-                        if "Fund" in task and "Vault" not in task:
-                            task = task.replace("Fund", "Fund") + " Vault"
-                        elif "Swept" in task:
-                            task = task.replace("Swept", "Sweep")
-                        st.write(f"- {task}")
-
+    
 # ✅ Display Warnings (Fixed Argument)
 def display_warnings(warnings):
     # If there are no warnings, display "No warnings detected"
     if not warnings:
         st.success("No warnings detected.")
+    
+# ✅ Display Actionable Tasks
+def display_tasks(tasks_by_date):
+    st.subheader("📝 Actionable Tasks")
 
-# ✅ Display Forecast Data
+    for date, tasks in tasks_by_date.items():
+        # If there's only one task, display the date and task on the same line with the date in bold
+        if len(tasks) == 1:
+            st.write(f"**{date}**: {tasks[0]}")
+        else:
+            # Display the date in bold, followed by tasks
+            st.write(f"**{date}**")
+            for task in tasks:
+                st.write(f"- {task}")
+
 def display_forecast_data(forecast_df):
     st.subheader("📄 Forecast Data")
 

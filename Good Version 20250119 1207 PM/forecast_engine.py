@@ -57,16 +57,7 @@ def enhanced_forecast(actuals, recurring_expenses, cash_inflow, vaults, start_ba
     print(f"🔎 Corrected Mean Net Other Expenses (Excluding Current Month): {mean_net_other_expenses}")
 
     remaining_vault_budget = desired_budget - mean_recurring_expenses - mean_net_other_expenses
-
-    # ✅ Adjust Remaining Vault Budget for Pre-Funded Vaults This Month
-    funded_this_month = vaults[
-        (vaults['Date'] < today) &
-        (vaults['Date'].dt.month == today.month) &
-        (vaults['Date'].dt.year == today.year)
-    ]['Amount'].sum()
-
-    remaining_vault_budget -= funded_this_month
-    print(f"🔎 Adjusted Remaining Vault Budget (After Pre-Funded Vaults): ${remaining_vault_budget:,.2f}")
+    print(f"🔎 Initial Remaining Vault Budget: {remaining_vault_budget}")
 
     # ✅ Forecast Loop
     for day in pd.date_range(start=start_date, end=end_date):

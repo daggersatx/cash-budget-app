@@ -6,6 +6,8 @@ from data_loader import load_data
 
 # ✅ Load Data
 actuals, recurring_expenses, cash_inflow, vaults, start_balances, cc_payments = load_data()
+if any(df is None for df in [actuals, recurring_expenses, cash_inflow, vaults, start_balances, cc_payments]):
+    st.error("❌ Failed to load data from Dropbox. Check logs for details.")
 
 st.title("📊 Cash and Budget Forecasting App")
 

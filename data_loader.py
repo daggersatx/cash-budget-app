@@ -1,52 +1,46 @@
 import pandas as pd
+import io
 import logging
+from dropbox_config import get_dropbox_client
 
 # ✅ Set up logging for debugging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# ✅ Load and validate the local Excel file
-def load_local_excel(file_path):
+def load_excel_from_dropbox(file_path):
+    """Download an Excel file from Dropbox and parse it."""
+    dbx = get_dropbox_client()
+    if not dbx:
+        logging.error("❌ Dropbox client initialization failed.")
+        return None
+
     try:
-        excel_data = pd.ExcelFile(file_path)
-        logging.info(f"✅ Loaded local file: {file_path}")
-
-        # ✅ Load each sheet into its respective DataFrame
-        actuals = excel_data.parse('Actuals')
-        logging.info("✅ Actuals data loaded.")
-        
-        recurring_expenses = excel_data.parse('Recurring Expenses')
-        logging.info("✅ Recurring Expenses data loaded.")
-        
-        cash_inflow = excel_data.parse('Cash Inflow')
-        logging.info("✅ Cash Inflow data loaded.")
-        
-        vaults = excel_data.parse('Vaults')
-        logging.info("✅ Vaults data loaded.")
-        
-        start_balances = excel_data.parse('Start Balances')
-        logging.info("✅ Start Balances data loaded.")
-        
-        cc_payments = excel_data.parse('CC Payments')
-        logging.info("✅ CC Payments data loaded.")
-
-        # ✅ Return all loaded DataFrames
-        return actuals, recurring_expenses, cash_inflow, vaults, start_balances, cc_payments
-
+        logging.info(f"🔍 Attempting to download file: {file_path}")
+        metadata, res = dbx.files_download(file_path)
+        logging.info(f"✅ File downloaded: {metadata.name}")
+        logging.info(f"File size: {len(res.content)} bytes")
+        return pd.ExcelFile(io.BytesIO(res.content))
     except Exception as e:
-        logging.error(f"❌ Error loading or validating local file: {e}")
+        logging.error(f"❌ Error downloading or parsing file from Dropbox: {e}")
+        return None
+
+def load_data():
+    """Main function to load data from Dropbox."""
+    dropbox_file_path = '/Cash Budget Data.xlsx'
+    excel_data = load_excel_from_dropbox(dropbox_file_path)
+    if not excel_data:
         return None, None, None, None, None, None
 
-# ✅ Define the main data loading function
-def load_data():
-    file_path = 'C:\\Users\\karlh\\Dropbox\\Apps\\cash_budget_app\\Cash Budget Data.xlsx'
-    return load_local_excel(file_path)
+    try:
+        # Parse sheets into DataFrames
+        actuals = excel_data.parse('Actuals')
+        recurring_expenses = excel_data.parse('Recurring Expenses')
+        cash_inflow = excel_data.parse('Cash Inflow')
+        vaults = excel_data.parse('Vaults')
+        start_balances = excel_data.parse('Start Balances')
+        cc_payments = excel_data.parse('CC Payments')
 
-# ✅ Load the data by calling load_data() directly
-actuals, recurring_expenses, cash_inflow, vaults, start_balances, cc_payments = load_data()
-
-# ✅ Debug: Confirm that CC Payments is loaded
-if cc_payments is not None:
-    print("✅ CC Payments data loaded successfully:")
-    print(cc_payments.head())
-else:
-    print("❌ CC Payments data failed to load.")
+        logging.info("✅ All data loaded successfully.")
+        return actuals, recurring_expenses, cash_inflow, vaults, start_balances, cc_payments
+    except Exception as e:
+        logging.error(f"❌ Error parsing the Excel file: {e}")
+        return None, None, None, None, None, None

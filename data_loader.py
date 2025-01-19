@@ -27,9 +27,3 @@ def load_local_excel(file_path):
 # ✅ Load the data by calling load_data() directly
 # actuals, recurring_expenses, cash_inflow, vaults, start_balances, cc_payments = load_data()
 
-# ✅ Debug: Confirm that CC Payments is loaded
-if cc_payments is not None:
-    print("✅ CC Payments data loaded successfully:")
-    print(cc_payments.head())
-else:
-    print("❌ CC Payments data failed to load.")

@@ -1,6 +1,6 @@
-import pandas as pd
-import logging
 import os
+import logging
+import pandas as pd
 
 # ✅ Set up logging for debugging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -24,5 +24,7 @@ def load_local_excel(file_path):
         logging.error(f"❌ Error loading or validating local file: {e}")
         return None, None, None, None, None, None
 
-# ✅ Load the data by calling load_data() directly
-# actuals, recurring_expenses, cash_inflow, vaults, start_balances, cc_payments = load_data()
+# ✅ Main function for loading data
+def load_data():
+    file_path = 'Cash Budget Data.xlsx'
+    return load_local_excel(file_path)

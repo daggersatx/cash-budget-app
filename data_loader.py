@@ -9,7 +9,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 def load_local_excel(file_path):
     if not os.path.exists(file_path):
         logging.error(f"❌ File not found: {file_path}")
-        st.error(f"❌ File not found: {file_path}")
         return None, None, None, None, None, None
     try:
         excel_data = pd.ExcelFile(file_path)
